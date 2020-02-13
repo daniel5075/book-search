@@ -5,41 +5,37 @@ import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
+import Form from "../components/Form";
+import Results from "../components/Results";
 
-class Books extends Component {
+class Search extends Component {
   state = {
     books: [],
-    title: "",
-    author: "",
-    description: "",
-    image: "",
-    link: ""
+    value: ""
   };
 
   componentDidMount() {
-    this.loadBooks();
+    this.searchBookFromGoogle();
   }
 
-  loadBooks = () => {
-    API.getBooks()
+  searchBookFromGoogle = query => {
+    API.getBook(query)
       .then(res =>
         this.setState({
-          books: res.data,
-          title: "",
-          author: "",
-          description: "",
-          image: "",
-          link: ""
+          books: res.data.items.map(bookInfo => this.createBook(bookInfo))
         })
       )
       .catch(err => console.log(err));
   };
-
-  deleteBook = id => {
-    API.deleteBook(id)
-      .then(res => this.loadBooks())
-      .catch(err => console.log(err));
+  createBook = bookInfo => {
+    console.log(bookInfo.items.volumeInfo.titleo);
+    return {
+      title: bookInfo.items.volumeInfo.title,
+      authors: bookInfo.items.volumeInfo.authors,
+      description: bookInfo.items.volumeInfo.description,
+      image: bookInfo.items.volumeInfo.imageLinks.thumbnail,
+      link: bookInfo.items.volumeInfo.previewLink
+    };
   };
 
   handleInputChange = event => {
@@ -51,15 +47,7 @@ class Books extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    }
+    this.searchBookFromGoogle(this.state.search);
   };
 
   render() {
@@ -71,44 +59,15 @@ class Books extends Component {
               <h1>(React) Google Books Search</h1>
               <h2>Search for and Save Books of Interest</h2>
             </Jumbotron>
-            {/* <Jumbotron> */}
-            <h3>Book Search</h3>
-            <form>
-              <Input
-                value={this.state.title}
-                onChange={this.handleInputChange}
-                name="title"
-                placeholder="Title (required)"
-              />
-
-              <FormBtn
-                disabled={!(this.state.author && this.state.title)}
-                onClick={this.handleFormSubmit}
-              >
-                Search
-              </FormBtn>
-            </form>
-            {/* </Jumbotron> */}
-
-            <Jumbotron>
-              <h1>Results</h1>
-            </Jumbotron>
-            {this.state.books.length ? (
-              <List>
-                {this.state.books.map(book => (
-                  <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
-                      <strong>
-                        {book.title} by {book.author}
-                      </strong>
-                    </Link>
-                    <DeleteBtn onClick={() => this.deleteBook(book._id)} />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <h3>No Results to Display</h3>
-            )}
+            <Form>
+              search={this.state.search}
+              handleInputChange={this.handleInputChange}
+              handleFormSubmit={this.handleFormSubmit}
+            </Form>
+            <div className="container">
+              <h2>Results</h2>
+              <Results books={this.state.books}></Results>
+            </div>
           </Col>
         </Row>
       </Container>
@@ -116,4 +75,4 @@ class Books extends Component {
   }
 }
 
-export default Books;
+export default Search;
