@@ -28,13 +28,13 @@ class Search extends Component {
       .catch(err => console.log(err));
   };
   createBook = bookInfo => {
-    console.log(bookInfo.items.volumeInfo.titleo);
+    console.log(bookInfo + "here");
     return {
-      title: bookInfo.items.volumeInfo.title,
-      authors: bookInfo.items.volumeInfo.authors,
-      description: bookInfo.items.volumeInfo.description,
-      image: bookInfo.items.volumeInfo.imageLinks.thumbnail,
-      link: bookInfo.items.volumeInfo.previewLink
+      title: bookInfo.volumeInfo.title,
+      authors: bookInfo.volumeInfo.authors,
+      description: bookInfo.volumeInfo.description,
+      image: bookInfo.volumeInfo.imageLinks.thumbnail,
+      link: bookInfo.volumeInfo.previewLink
     };
   };
 
