@@ -11,24 +11,29 @@ import Results from "../components/Results";
 class Search extends Component {
   state = {
     books: [],
-    value: ""
+    value: "",
+    // searchBookFromGoogle: "hardy boys"
   };
 
   componentDidMount() {
-    this.searchBookFromGoogle();
+    this.searchBookFromGoogle(this.state.searchBookFromGoogle);
+
   }
 
   searchBookFromGoogle = query => {
+
+
     API.getBook(query)
       .then(res =>
         this.setState({
           books: res.data.items.map(bookInfo => this.createBook(bookInfo))
         })
+
       )
       .catch(err => console.log(err));
   };
   createBook = bookInfo => {
-    console.log(bookInfo + "here");
+
     return {
       title: bookInfo.volumeInfo.title,
       authors: bookInfo.volumeInfo.authors,
@@ -47,7 +52,8 @@ class Search extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    this.searchBookFromGoogle(this.state.search);
+    this.searchBookFromGoogle(this.state.searchBookFromGoogle);
+
   };
 
   render() {
@@ -60,9 +66,10 @@ class Search extends Component {
               <h2>Search for and Save Books of Interest</h2>
             </Jumbotron>
             <Form>
-              search={this.state.search}
+              search={this.state.searchBookFromGoogle}
               handleInputChange={this.handleInputChange}
               handleFormSubmit={this.handleFormSubmit}
+
             </Form>
             <div className="container">
               <h2>Results</h2>
@@ -72,6 +79,7 @@ class Search extends Component {
         </Row>
       </Container>
     );
+
   }
 }
 
