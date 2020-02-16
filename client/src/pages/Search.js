@@ -16,7 +16,7 @@ class Search extends Component {
   };
 
   componentDidMount() {
-    this.searchBookFromGoogle(value);
+    this.searchBookFromGoogle();
   }
 
   searchBookFromGoogle = query => {
