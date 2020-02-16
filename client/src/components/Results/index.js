@@ -44,13 +44,6 @@ class Results extends Component {
             {this.props.books.map(result => (
               <div className="card mb-3" key={result._id}>
                 <div className="row">
-                  <div className="col-md-2">
-                    <img
-                      alt={result.title}
-                      className="img-fluid"
-                      src={result.image}
-                    />
-                  </div>
                   <div className="col-md-10">
                     <div className="card-body">
                       <h5 className="card-title">
@@ -60,23 +53,32 @@ class Results extends Component {
                       <div>
                         <a
                           href={result.link}
-                          className="btn badge-pill btn-outline-dark mt-3"
-                          target="_blank"
+                          className="btn btn-outline-info mr-3"
                         >
                           View
                         </a>
                         <button
                           onClick={() => this.handleSave(result)}
-                          className="btn badge-pill btn-outline-warning mt-3 ml-3"
+                          className="btn  btn-outline-info"
                         >
                           {this.state.savedBooks
                             .map(book => book._id)
                             .includes(result._id)
-                            ? "Unsave"
+                            ? "Delete"
                             : "Save"}
                         </button>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="col-md-2">
+                    <br></br>
+                    <br></br>
+                    <img
+                      alt={result.title}
+                      className="img-fluid"
+                      src={result.image}
+                    />
                   </div>
                 </div>
               </div>

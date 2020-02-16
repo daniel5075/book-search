@@ -1,18 +1,14 @@
 import React, { Component } from "react";
-import DeleteBtn from "../components/DeleteBtn";
-import Jumbotron from "../components/Jumbotron";
-import API from "../utils/API";
-import { Link } from "react-router-dom";
-import { Col, Row, Container } from "../components/Grid";
-import { List, ListItem } from "../components/List";
 import Form from "../components/Form";
 import Results from "../components/Results";
+import API from "../utils/API";
+import { Col, Row, Container } from "../components/Grid";
+import Jumbotron from "../components/Jumbotron";
 
 class Search extends Component {
   state = {
-    books: [],
-    value: ""
-    // searchBookFromGoogle: "hardy boys"
+    books: []
+    // value: ""
   };
 
   componentDidMount() {
@@ -26,10 +22,12 @@ class Search extends Component {
           books: res.data.items.map(bookInfo => this.createBook(bookInfo))
         })
       )
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
   };
+
   createBook = bookInfo => {
     return {
+      _id: bookInfo.id,
       title: bookInfo.volumeInfo.title,
       authors: bookInfo.volumeInfo.authors,
       description: bookInfo.volumeInfo.description,
@@ -59,11 +57,12 @@ class Search extends Component {
               <h1>(React) Google Books Search</h1>
               <h2>Search for and Save Books of Interest</h2>
             </Jumbotron>
-            <Form>
+
+            <Form
               search={this.state.searchBookFromGoogle}
               handleInputChange={this.handleInputChange}
               handleFormSubmit={this.handleFormSubmit}
-            </Form>
+            />
             <div className="container">
               <h2>Results</h2>
               <Results books={this.state.books}></Results>
